@@ -1,0 +1,35 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "ubuntu/jammy64"
+  config.vm.hostname = "docker-server"
+
+  # config.vm.box_check_update = false
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "public_network"
+
+  config.vm.synced_folder "./data", "/vagrant_data"
+  
+  config.vm.provider "virtualbox" do |vb|
+    # vb.gui = true
+    # Customize the amount of memory on the VM:
+    vb.memory = "2048"
+    vb.cpus = 1
+  end
+  
+  config.vm.provision "shell", path: "scripts/setup-docker.sh"
+
+end
